@@ -17,6 +17,8 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  late Future<Map<String, dynamic>> weather;
+
   Future<Map<String, dynamic>> getCurrentWeather() async {
     String cityName = "London";
     try {
@@ -37,11 +39,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    weather = getCurrentWeather();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    AppBar appBar = AppBarWidget().getAppBar();
     return Scaffold(
-      appBar: appBar,
-      body: BodyWidget(future: getCurrentWeather()),
+      appBar: AppBar(
+        title: Text(
+          "Weather App",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: [
+          // GestureDetector(child: Icon(Icons.refresh), onTap: () => {print('refresh')}),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                weather = getCurrentWeather();
+              });
+            },
+            icon: Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      body: BodyWidget(future: weather),
     );
   }
 }

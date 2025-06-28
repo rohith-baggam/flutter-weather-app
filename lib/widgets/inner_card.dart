@@ -16,7 +16,7 @@ class HourlyForecastWidget extends StatelessWidget {
     return Card(
       elevation: 6,
       child: Container(
-        width: 200,
+        width: 100,
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
         child: Column(
@@ -24,6 +24,7 @@ class HourlyForecastWidget extends StatelessWidget {
             Text(
               time,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              maxLines: 1,
             ),
             SizedBox(height: 8),
             Icon(icon),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/widgets/aditional_information.dart';
 import 'package:weather_app/widgets/inner_card.dart';
 import 'package:weather_app/widgets/main_card_widget.dart';
@@ -121,7 +122,7 @@ class WeatherForecastScrollWidget extends StatelessWidget {
     for (int i = 1; i < 10; i++) {
       dynamic mainData = results[i]['main'];
       final weather = results[i]['weather'][0]['main'].toString();
-      final time = results[i]['dt_txt'].toString().substring(11, 16);
+      final time = DateTime.parse(results[i]['dt_txt']);
       data.add(
         SizedBox(
           width: 100,
@@ -129,7 +130,7 @@ class WeatherForecastScrollWidget extends StatelessWidget {
             icon: weather == "Clouds" || weather == "Rain"
                 ? Icons.cloud
                 : Icons.sunny,
-            time: time,
+            time: DateFormat.Hm().format(time),
             temperature: mainData['temp'].toString(),
           ),
         ),
@@ -140,9 +141,27 @@ class WeatherForecastScrollWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(children: getWeatherForecast()),
+    // return SingleChildScrollView(
+    //   scrollDirection: Axis.horizontal,
+    //   child: Row(children: getWeatherForecast()),
+    // );
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        itemCount: 30,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final hourlyForecast = results[index + 1];
+          final weather = hourlyForecast['weather'][0]['main'].toString();
+          return HourlyForecastWidget(
+            time: hourlyForecast['dt_txt'].toString().substring(11, 16),
+            temperature: hourlyForecast['main']['temp'].toString(),
+            icon: weather == "Clouds" || weather == "Rain"
+                ? Icons.cloud
+                : Icons.sunny,
+          );
+        },
+      ),
     );
   }
 }
