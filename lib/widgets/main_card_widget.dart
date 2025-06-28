@@ -3,7 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class MainCardWidget extends StatelessWidget {
-  const MainCardWidget({super.key});
+  final double temperature;
+  final String currentSky;
+  const MainCardWidget({
+    super.key,
+    required this.temperature,
+    required this.currentSky,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +28,18 @@ class MainCardWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    "300°F",
+                    "$temperature°K",
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 16),
-                  Icon(Icons.cloud, size: 64),
+                  Icon(
+                    currentSky == "Clouds" || currentSky == "Rain"
+                        ? Icons.cloud
+                        : Icons.sunny,
+                    size: 64,
+                  ),
                   SizedBox(height: 16),
-                  Text("Rain", style: TextStyle(fontSize: 20)),
+                  Text(currentSky, style: TextStyle(fontSize: 20)),
                 ],
               ),
             ),

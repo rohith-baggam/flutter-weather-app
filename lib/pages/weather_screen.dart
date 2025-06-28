@@ -1,14 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:weather_app/widgets/app_bar.dart';
 import 'package:weather_app/pages/body_widget.dart';
+import 'package:http/http.dart' as http;
 
-class WeatherScreen extends StatelessWidget {
+// default 6e895ca36a4ab63193c8c03a481bfb87
+
+// created 25cfa684aded55c6d5095ffbff91f352
+
+class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
+
+  @override
+  State<WeatherScreen> createState() => _WeatherScreenState();
+}
+
+class _WeatherScreenState extends State<WeatherScreen> {
+  Future<Map<String, dynamic>> getCurrentWeather() async {
+    String cityName = "London";
+    try {
+      final res = await http.get(
+        Uri.parse(
+          "https://api.openweathermap.org/data/2.5/forecast?q=$cityName,uk&APPID=6e895ca36a4ab63193c8c03a481bfb87",
+        ),
+      );
+      final data = jsonDecode(res.body);
+      if (data['cod'] != '200') {
+        throw data['message'];
+      }
+      return data;
+      // temperature = data['list'][0]['main']['temp'];
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     AppBar appBar = AppBarWidget().getAppBar();
-
-    return Scaffold(appBar: appBar, body: BodyWidget());
+    return Scaffold(
+      appBar: appBar,
+      body: BodyWidget(future: getCurrentWeather()),
+    );
   }
 }
